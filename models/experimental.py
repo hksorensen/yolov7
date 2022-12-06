@@ -244,11 +244,11 @@ class End2End(nn.Module):
 
 
 
-def attempt_load(weights, map_location=None):
+def attempt_load(weights, map_location=None, tag:str=None):
     # Loads an ensemble of models weights=[a,b,c] or a single model weights=[a] or weights=a
     model = Ensemble()
     for w in weights if isinstance(weights, list) else [weights]:
-        attempt_download(w)
+        attempt_download(w, tag=tag)
         ckpt = torch.load(w, map_location=map_location)  # load
         model.append(ckpt['ema' if ckpt.get('ema') else 'model'].float().fuse().eval())  # FP32 model
     
